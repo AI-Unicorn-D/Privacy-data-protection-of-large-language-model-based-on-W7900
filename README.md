@@ -6,11 +6,13 @@ Software: AI frameworks (e.g., TensorFlow, PyTorch) Speech recognition and text-
 Build the environment
 *When building wsl, pay attention to the compatibility between different versions of the software
 Compatibility matrices (WSL) — Use ROCm on Radeon GPUs (amd.com)
+
 1、Ensure that WSL is installed before proceeding with ROCm installation.
 Open PowerShell or Windows Command Prompt in administrator mode by right-clicking and selecting "Run as administrator", enter the 
 wsl --install
 wsl --list –online //列出可安装的各类wsl版本
 wsl --install -d <Distribution Name>//用你想安装的特定版本替代<Distribution Name>
+
 2、在windows中安装合适的驱动WSL requires installation of the following Windows driver.
 To install the compatible driver, refer to AMD Software: Adrenalin Edition™ 24.6.1 for WSL 2.
  
@@ -19,6 +21,7 @@ Enter the following commands to install the installer script for the latest comp
 sudo apt update
 wget https://repo.radeon.com/amdgpu-install/6.1.3/ubuntu/jammy/amdgpu-install_6.1.60103-1_all.deb
 sudo apt install ./amdgpu-install_6.1.60103-1_all.deb
+
 4、Install AMD unified kernel-mode GPU driver, ROCm, and graphics
 Enter the following command to display a list of available usecases:
 sudo amdgpu-install --list-usecase
@@ -26,6 +29,7 @@ WSL usecase
 AMD recommends installing the WSL usecase by default.
 Run the following command to install open source graphics and ROCm.
 amdgpu-install -y --usecase=wsl,rocm --no-dkms
+
 5、Post-install verification check
 Run a post-installation check to verify that the installation is complete:
 Check if the GPU is listed as an agent.
@@ -78,8 +82,10 @@ prompt processing is the step in which LLM processes the text input by the user.
 Reflects the response delay of users in daily use of LLM (especially when the number of conversations reaches a certain length), as well as the throughput of processing large amounts of text work (such as full-text translation, summarization, etc.). The performance bottleneck of prompt processing is generally biased towards CU throughput, especially matrix units.
 Text generation 1024 token means generating text, and the test length is 1024 tokens
 Reflects the speed of LLM output text. Generally, when running larger models, the main performance bottleneck is the video memory bandwidth.
+
 Test results
 It should be noted that under the premise of prompt processing speed of hundreds to thousands of tokens/s, in actual use, even if the conversation context is very long, the difference in prompt processing performance is relatively limited to the user. Therefore, the Radeon solution also has its own characteristics.
 
 Of course, llama.cpp is not the best solution for both GPUs. For example, when W7900 uses vLLM+GPTQ quantization to run llama 3 70B, the single-card text generation can run at about 17 tokens/s, and prompt processing is also significantly faster; NVIDIA also has a faster TensorRT-LLM solution. This is even worse for computing cards: llama.cpp has never been optimized specifically for computing cards, and testing single-user throughput is not the only performance indicator of computing cards. The cost-effectiveness of computing cards running single-user llama.cpp is even worse than that of GDDR graphics cards. 
+
 When doctors use AI, they need to input a large amount of patient information, such as medical history, family history, living habits, etc. Once this information is leaked or misused, it will cause a serious invasion of patient privacy. Therefore, in the process of using generative AI, we must attach great importance to data security and privacy protection to ensure that patients’ personal information is not illegally obtained and used. Currently, most privacy-preserving machine learning solutions based on secure multi-party computation (MPC) run on CPUs, but GPUs have become an indispensable hardware device in the field of large medical models. The powerful computing power of GPU can greatly speed up the training and reasoning of large medical models, especially the calculation speed of neural networks. In order to enable MPC's privacy-preserving machine learning solution to fully utilize the computing performance of GPU and accelerate the training and prediction efficiency of MPC-based privacy-preserving machine learning.
